@@ -206,26 +206,25 @@
 
   .wave div {
     width: 5px;
-    height: 10px;
+    height: 15px; /* ทำให้คลื่นแสดงตลอดเวลา */
     background: white;
     border-radius: 5px;
-    animation: waveAnim 1.2s infinite ease-in-out;
-    opacity: 0;
+    opacity: 1; /* แสดงตลอดเวลา */
   }
 
-  /* คลื่นสูง-ต่ำแบบสุ่ม */
+  /* คลื่นสูง-ต่ำเมื่อเล่นเพลง */
+  .playing div {
+    animation: waveAnim 1.2s infinite ease-in-out;
+  }
+
+  /* ความสูงของคลื่นเปลี่ยนไปเรื่อย ๆ */
   .wave div:nth-child(1) { animation-delay: 0s; }
   .wave div:nth-child(2) { animation-delay: 0.2s; }
   .wave div:nth-child(3) { animation-delay: 0.4s; }
   .wave div:nth-child(4) { animation-delay: 0.6s; }
   .wave div:nth-child(5) { animation-delay: 0.8s; }
 
-  /* แสดง Wave เมื่อเล่นเพลง */
-  .playing div {
-    opacity: 1;
-  }
-
-  /* Animation */
+  /* Animation คลื่น (เฉพาะเมื่อเพลงเล่น) */
   @keyframes waveAnim {
     0%, 100% { height: 10px; }
     50% { height: 20px; }
@@ -293,19 +292,18 @@
     music.pause();
     music.currentTime = 0;
     musicText.innerHTML = "🔇 ไม่ได้เล่นเพลง";
-    waveform.classList.remove('playing'); // หยุดแสดง waveform // รีเซ็ตเพลงไปจุดเริ่มต้น
+   waveform.classList.remove('playing'); // ให้คลื่นหยุดนิ่ง แต่ยังคงแสดงอยู่
   }
 
-    // Audio functions
-   const music = document.getElementById('bgMusic');
-   const musicStatus = document.getElementById('musicStatus');
-   const waveform = document.getElementById('waveform');
-   const musicText = document.getElementById('musicText');
+     // ควบคุมเพลง
+  const music = document.getElementById('bgMusic');
+  const waveform = document.getElementById('waveform');
+  const musicText = document.getElementById('musicText');
 
     function playMusic() {
       music.play().catch((err) => console.log('Audio playback issue:', err));
       musicText.innerHTML = "🔊 กำลังเล่นเพลง...";
-      waveform.classList.add('playing'); // เริ่มแสดง waveform
+       waveform.classList.add('playing'); // ให้คลื่นเคลื่อนไหว
     }
 
     // Create floating hearts
