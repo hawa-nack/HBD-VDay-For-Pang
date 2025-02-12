@@ -179,6 +179,59 @@
     .view-button:hover {
       background: #ff7a8c;
     }
+    .music-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 20px;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+  }
+
+  /* เอฟเฟกต์ Wave */
+  .wave {
+    display: flex;
+    gap: 3px;
+    height: 20px;
+    align-items: center;
+  }
+
+  .wave div {
+    width: 5px;
+    height: 10px;
+    background: white;
+    border-radius: 5px;
+    animation: waveAnim 1.2s infinite ease-in-out;
+    opacity: 0;
+  }
+
+  /* คลื่นสูง-ต่ำแบบสุ่ม */
+  .wave div:nth-child(1) { animation-delay: 0s; }
+  .wave div:nth-child(2) { animation-delay: 0.2s; }
+  .wave div:nth-child(3) { animation-delay: 0.4s; }
+  .wave div:nth-child(4) { animation-delay: 0.6s; }
+  .wave div:nth-child(5) { animation-delay: 0.8s; }
+
+  /* แสดง Wave เมื่อเล่นเพลง */
+  .playing div {
+    opacity: 1;
+  }
+
+  /* Animation */
+  @keyframes waveAnim {
+    0%, 100% { height: 10px; }
+    50% { height: 20px; }
+  }
+
+    
   </style>
 </head>
 
@@ -187,6 +240,11 @@
   <!-- Floating hearts background -->
   <div class="hearts-decoration" id="heartsContainer"></div>
 
+  <div id="musicStatus" class="music-status">
+  <div id="waveform" class="wave"></div>
+  <span id="musicText">🔇 ไม่ได้เล่นเพลง</span>
+  </div>
+  
   <!-- Valentine's & Birthday Card -->
   <div class="card-container" onclick="toggleCard(this)">
     <div class="card-front">
@@ -231,14 +289,21 @@
     }
     function stopMusic() {
     music.pause();
-    music.currentTime = 0; // รีเซ็ตเพลงไปจุดเริ่มต้น
+    music.currentTime = 0;
+    musicText.innerHTML = "🔇 ไม่ได้เล่นเพลง";
+    waveform.classList.remove('playing'); // หยุดแสดง waveform // รีเซ็ตเพลงไปจุดเริ่มต้น
   }
 
     // Audio functions
-    const music = document.getElementById('bgMusic');
+   const music = document.getElementById('bgMusic');
+   const musicStatus = document.getElementById('musicStatus');
+   const waveform = document.getElementById('waveform');
+   const musicText = document.getElementById('musicText');
 
     function playMusic() {
       music.play().catch((err) => console.log('Audio playback issue:', err));
+      musicText.innerHTML = "🔊 กำลังเล่นเพลง...";
+      waveform.classList.add('playing'); // เริ่มแสดง waveform
     }
 
     // Create floating hearts
