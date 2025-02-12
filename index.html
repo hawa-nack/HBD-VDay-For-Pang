@@ -223,8 +223,16 @@
   <script>
     function toggleCard(card) {
       card.classList.toggle('opened');
+      if (card.classList.contains('opened')) {
       playMusic();
+    } else {
+      stopMusic();
     }
+    }
+    function stopMusic() {
+    music.pause();
+    music.currentTime = 0; // รีเซ็ตเพลงไปจุดเริ่มต้น
+  }
 
     // Audio functions
     const music = document.getElementById('bgMusic');
