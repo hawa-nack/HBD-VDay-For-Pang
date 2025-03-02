@@ -1,325 +1,239 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
   <meta charset="UTF-8">
+  <title>Countdown HBD with Music (Centered Wave)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentine & Birthday Card for Pang</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Google Fonts สำหรับฟอนต์สวยๆ -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    * {
+    /* พื้นหลังของหน้า */
+    body {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 100%);
-      padding: 20px;
-      perspective: 1000px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .card-container {
-      width: 380px;
-      height: 500px;
-      position: relative;
-      cursor: pointer;
-      transform-style: preserve-3d;
-      transition: transform 1s;
-      z-index: 10;
-      margin-bottom: 20px;
-    }
-
-    .card-container.opened {
-      transform: rotateY(-180deg);
-    }
-
-    .card-front,
-    .card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      border-radius: 20px;
-      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 25px;
-      background: white;
-      overflow: hidden;
-    }
-
-    .card-back {
-      transform: rotateY(180deg);
-      background: linear-gradient(135deg, #fff5f5 0%, #ffe9e9 100%);
-    }
-
-    .heart-icon {
-      font-size: 4rem;
-      color: #ff4d6d;
-      animation: pulse 1.5s infinite;
-      margin-bottom: 20px;
-    }
-
-    .card-text {
-      text-align: center;
-      color: #ff4d6d;
-      font-size: 1.6rem;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    .click-hint {
-      font-size: 1rem;
-      color: #666;
-      position: absolute;
-      bottom: 20px;
-      animation: bounce 2s infinite;
-    }
-
-    .hearts-decoration {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .mini-heart {
-      position: absolute;
-      font-size: 1rem;
-      color: #ff4d6d;
-      opacity: 0.5;
-      animation: float 3s ease-in infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(180deg); }
-      100% { transform: translateY(0) rotate(360deg); }
-    }
-
-    .message-content {
-      text-align: center;
-      padding: 10px;
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all 0.5s ease-out;
-    }
-
-    .opened .card-back .message-content {
-      transform: translateY(0);
-      opacity: 1;
-      transition-delay: 0.5s;
-    }
-
-    .message-title {
-      font-size: 1.8rem;
-      color: #ff4d6d;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
-    .message-body {
-      font-size: 1rem;
-      color: #666;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .love-signature {
-      font-style: italic;
-      color: #ff4d6d;
-      font-size: 0.9rem;
-    }
-
-    .button-container {
-      margin-top: 20px;
+      font-family: 'Roboto', sans-serif;
+      color: #333;
       text-align: center;
     }
 
-    .view-button {
+    /* กล่องหลัก (การ์ด) */
+    .container {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px 50px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
       display: inline-block;
-      padding: 12px 20px;
-      font-size: 1rem;
-      font-weight: bold;
+    }
+
+    /* ปุ่มควบคุมเพลง + เอฟเฟกต์คลื่น */
+    .music-wrapper {
+      margin-bottom: 20px; /* เว้นระยะด้านล่าง เพื่อไม่ให้ชิดกับหัวข้อ */
+      text-align: center; /* จัดปุ่มให้อยู่กึ่งกลาง */
+    }
+    .music-toggle {
+      background: rgba(0, 0, 0, 0.6);
       color: white;
-      background: #ff4d6d;
       border: none;
       border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 1rem;
       cursor: pointer;
-      text-decoration: none;
-      transition: background 0.3s ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s ease;
+    }
+    .music-toggle:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    /* ปรับให้คลื่นยึดกึ่งกลางของแท่ง เพื่อขยับได้ทั้งบนและล่าง */
+    .wave {
+      display: flex;
+      gap: 3px;
+      height: 20px;
+      align-items: center; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    }
+    .wave div {
+      width: 5px;
+      height: 10px;
+      background: white;
+      border-radius: 5px;
+      opacity: 1;
+      transform-origin: center; /* ยึดจุดหมุนตรงกลางแท่ง */
+    }
+    /* เมื่อเพลงกำลังเล่น ให้แท่งคลื่นขยับด้วยการ scaleY จากจุดกึ่งกลาง */
+    .playing .wave div {
+      animation: waveAnim 1.2s infinite ease-in-out;
+    }
+    .wave div:nth-child(1) { animation-delay: 0s; }
+    .wave div:nth-child(2) { animation-delay: 0.2s; }
+    .wave div:nth-child(3) { animation-delay: 0.4s; }
+    .wave div:nth-child(4) { animation-delay: 0.6s; }
+    .wave div:nth-child(5) { animation-delay: 0.8s; }
+    @keyframes waveAnim {
+      0%, 100% { transform: scaleY(1.0); }
+      50% { transform: scaleY(1.8); }
     }
 
-    .view-button:hover {
-      background: #ff7a8c;
+    /* ส่วนของ Countdown */
+    .countdown h1 {
+      margin-bottom: 20px;
+      font-size: 36px;
+      font-family: 'Pacifico', cursive;
+      color: #e91e63;
     }
-    .music-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 10px 20px;
-    border-radius: 20px;
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 20;
-  }
+    .time {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      font-size: 28px;
+      flex-wrap: wrap;
+    }
+    .time div {
+      background: rgba(255, 255, 255, 0.6);
+      padding: 15px;
+      border-radius: 10px;
+      min-width: 80px;
+      border: 2px solid #ffcccb;
+    }
+    .time div span {
+      display: block;
+      font-size: 20px;
+      margin-top: 5px;
+      color: #e91e63;
+    }
 
-  /* เอฟเฟกต์ Wave */
-  .wave {
-    display: flex;
-    gap: 3px;
-    height: 20px;
-    align-items: center;
-  }
-
-  .wave div {
-    width: 5px;
-    height: 15px; /* ทำให้คลื่นแสดงตลอดเวลา */
-    background: white;
-    border-radius: 5px;
-    opacity: 1; /* แสดงตลอดเวลา */
-  }
-
-  /* คลื่นสูง-ต่ำเมื่อเล่นเพลง */
-  .playing div {
-    animation: waveAnim 1.2s infinite ease-in-out;
-  }
-
-  /* ความสูงของคลื่นเปลี่ยนไปเรื่อย ๆ */
-  .wave div:nth-child(1) { animation-delay: 0s; }
-  .wave div:nth-child(2) { animation-delay: 0.2s; }
-  .wave div:nth-child(3) { animation-delay: 0.4s; }
-  .wave div:nth-child(4) { animation-delay: 0.6s; }
-  .wave div:nth-child(5) { animation-delay: 0.8s; }
-
-  /* Animation คลื่น (เฉพาะเมื่อเพลงเล่น) */
-  @keyframes waveAnim {
-    0%, 100% { height: 10px; }
-    50% { height: 20px; }
-  }
-
-    
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px 30px;
+        margin: 20px;
+      }
+      .countdown h1 {
+        font-size: 28px;
+      }
+      .time {
+        font-size: 20px;
+        gap: 10px;
+      }
+      .time div {
+        padding: 10px;
+        min-width: 60px;
+      }
+      .time div span {
+        font-size: 16px;
+      }
+      .music-toggle {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <div class="main-content" id="mainContent"></div>
-  <!-- Floating hearts background -->
-  <div class="hearts-decoration" id="heartsContainer"></div>
-
-  <div id="musicStatus" class="music-status">
-  <div id="waveform" class="wave">
-    <div></div><div></div><div></div><div></div><div></div>
-  </div>
-  <span id="musicText">🔇 ไม่ได้เล่นเพลง</span>
-  </div>
-  
-  <!-- Valentine's & Birthday Card -->
-  <div class="card-container" onclick="toggleCard(this)">
-    <div class="card-front">
-      <i class="fas fa-heart heart-icon"></i>
-      <div class="card-text">สุขสันต์วันเกิด & วันวาเลนไทน์</div>
-      <div class="click-hint">Click to open ❤️</div>
+  <div class="container">
+    <!-- โซนปุ่มเพลง -->
+    <div class="music-wrapper">
+      <button id="toggleMusicButton" class="music-toggle">
+        <div id="waveform" class="wave">
+          <div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <span id="musicText">🔊 กำลังเล่นเพลง...</span>
+      </button>
     </div>
-    <div class="card-back">
-      <div class="message-content">
-        <h2 class="message-title">สุขสันต์วันเกิดและวันวาเลนไทน์นะ แป้ง!</h2>
-        <p class="message-body">
-          ขอให้วันเกิดและวันวาเลนไทน์เป็นวันที่เต็มไปด้วยความสุข รอยยิ้ม และความรัก 😊<br><br>
-          วันเกิดปีนี้ขอให้แป้งได้รับพลังใจที่ยิ่งใหญ่ 💪 และวันวาเลนไทน์นี้ขอให้หัวใจของแป้งอบอุ่นด้วยความรักที่ดี 💖<br><br>
-          ไม่ว่าจะเป็นความฝัน ✨ ความรัก 💑 หรือความสุข 🎉 ขอให้ทุกสิ่งที่แป้งปรารถนาเป็นจริง<br><br>
-          ขอให้มีคนที่พร้อมจะเข้าใจและอยู่เคียงข้างเสมอ ไม่ว่าช่วงเวลานั้นจะเป็นแบบไหน 🤗💖
-        </p>
-        <div class="love-signature">✨🎂💕 สุขสันต์วันพิเศษครับ ❤️</div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown">
+      <h1>Countdown to HBD!</h1>
+      <div class="time">
+        <div>
+          <div id="days">0</div>
+          <span>วัน</span>
+        </div>
+        <div>
+          <div id="hours">0</div>
+          <span>ชั่วโมง</span>
+        </div>
+        <div>
+          <div id="minutes">0</div>
+          <span>นาที</span>
+        </div>
+        <div>
+          <div id="seconds">0</div>
+          <span>วินาที</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ปุ่มเปิดลิงก์ -->
-
-
-  <audio id="bgMusic" loop>
+  <!-- Audio element (พยายาม auto play) -->
+  <audio id="bgMusic" autoplay loop>
     <source src="Bodyslam01.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <script>
-    function toggleCard(card) {
-      card.classList.toggle('opened');
-      if (card.classList.contains('opened')) {
-      playMusic();
-    } else {
-      stopMusic();
-    }
-    }
-    function stopMusic() {
-    music.pause();
-    music.currentTime = 0;
-    musicText.innerHTML = "🔇 ไม่ได้เล่นเพลง";
-   waveform.classList.remove('playing'); // ให้คลื่นหยุดนิ่ง แต่ยังคงแสดงอยู่
-  }
-
-     // ควบคุมเพลง
-  const music = document.getElementById('bgMusic');
-  const waveform = document.getElementById('waveform');
-  const musicText = document.getElementById('musicText');
-
-    function playMusic() {
-      music.play().catch((err) => console.log('Audio playback issue:', err));
-      musicText.innerHTML = "🔊 กำลังเล่นเพลง...";
-       waveform.classList.add('playing'); // ให้คลื่นเคลื่อนไหว
-    }
-
-    // Create floating hearts
-    function createFloatingHearts() {
-      const container = document.getElementById('heartsContainer');
-      const heartCount = 15;
-
-      for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('i');
-        heart.classList.add('fas', 'fa-heart', 'mini-heart');
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.top = Math.random() * 100 + '%';
-        heart.style.animationDelay = Math.random() * 3 + 's';
-        container.appendChild(heart);
+    /* Countdown Timer */
+    const targetDate = new Date('February 5, 2026 00:00:00');
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        document.querySelector('.countdown').innerHTML = "<h1>Happy Birthday!</h1>";
+        return;
       }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
     }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-    // Initialize floating hearts
-    createFloatingHearts();
+    /* Music Control */
+    const music = document.getElementById('bgMusic');
+    const toggleMusicButton = document.getElementById('toggleMusicButton');
+    const musicText = document.getElementById('musicText');
+    const waveform = document.getElementById('waveform');
+
+    // พยายาม auto play เมื่อโหลดหน้าเว็บ (อาจถูกบล็อกโดยเบราว์เซอร์)
+    window.addEventListener('load', () => {
+      music.play().then(() => {
+        toggleMusicButton.classList.add('playing');
+        waveform.classList.add('playing');
+        musicText.textContent = "🔊 กำลังเล่นเพลง...";
+      }).catch((err) => {
+        musicText.textContent = "🔇 เล่นเพลง";
+        toggleMusicButton.classList.remove('playing');
+        waveform.classList.remove('playing');
+        console.log('Auto play was prevented:', err);
+      });
+    });
+
+    // สลับเล่น/หยุดเพลงเมื่อคลิกที่ปุ่ม
+    toggleMusicButton.addEventListener('click', () => {
+      if (music.paused) {
+        music.play().then(() => {
+          toggleMusicButton.classList.add('playing');
+          waveform.classList.add('playing');
+          musicText.textContent = "🔊 กำลังเล่นเพลง...";
+        }).catch((err) => console.log('Audio playback issue:', err));
+      } else {
+        music.pause();
+        toggleMusicButton.classList.remove('playing');
+        waveform.classList.remove('playing');
+        musicText.textContent = "🔇 เล่นเพลง";
+      }
+    });
   </script>
 </body>
-
 </html>
